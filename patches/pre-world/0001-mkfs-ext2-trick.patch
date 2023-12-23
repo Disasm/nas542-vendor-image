@@ -1,0 +1,15 @@
+--- trunk-orig/build/make_sysdisk.sh	2014-07-01 15:06:43.000000000 +0300
++++ trunk/build/make_sysdisk.sh	2023-12-16 16:50:39.921007454 +0200
+@@ -32,11 +32,7 @@
+ SYSDISK_SIZE=`du -sm fs | awk '{print $1}'`
+ SYSDISK_SIZE=$(($SYSDISK_SIZE+10))
+ dd if=/dev/zero of=sysdisk.img bs=1M count=${SYSDISK_SIZE}	# sysdisk.img -> clear before use and use a MACRO instead
+-/sbin/mkfs.ext2 -F -v -m0 sysdisk.img
+-mkdir -p sysdisk
+-sudo mount -o loop sysdisk.img sysdisk/
+-tar zxf sysdisk.tar.gz -C sysdisk/
+-sudo umount sysdisk/
++/usr/sbin/mkfs.ext2 -F -v -m0 -d fs sysdisk.img
+ 
+ echo -e " \033[1;32m<< Exit Critcal Section! >>\033[0m"
+ 
