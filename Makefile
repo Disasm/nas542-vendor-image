@@ -11,9 +11,6 @@ build-image: build-docker-image build/image/build_NAS542.tar.gz build/image/patc
 build-docker-image: build/docker/e2fsprogs-1.47.0.tar.xz build/docker/host.tar.gz build/docker/staging.tar.gz build/docker/tool.tar.gz build/docker/x-tools.tar.gz
 	$(DOCKER) build -t $(DOCKER_IMAGE_NAME) -f Dockerfile build/docker
 
-check-vendor-sources:
-	cd vendor && sha256sum --check --ignore-missing SHA256SUMS
-
 build/docker/e2fsprogs-1.47.0.tar.xz:
 	mkdir -p build/docker
 	rm -f build/docker/e2fsprogs-1.47.0.tar.xz.tmp

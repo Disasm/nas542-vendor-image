@@ -1,0 +1,46 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: Build firmware image
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Cache vendor source files
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: NAS542_V5.21(ABAG.7)C0
+
+      - name: Download vendor source files
+        run: |
+          cd vendor
+          wget --quiet --continue "${{ secrets.SOURCE_URL }}/build_NAS542.tar.gz"
+          wget --quiet --continue "${{ secrets.SOURCE_URL }}/host.tar.gz"
+          wget --quiet --continue "${{ secrets.SOURCE_URL }}/staging.tar.gz"
+          wget --quiet --continue "${{ secrets.SOURCE_URL }}/tool.tar.gz"
+          wget --quiet --continue "${{ secrets.SOURCE_URL }}/x-tools.tar.gz"
+          sha256sum --check --ignore-missing SHA256SUMS
+
+      - name: Build docker image
+        run: make build-docker-image
+
+      - name: Build firmware image
+        run: make build-image
+
+      - name: Upload firmware image
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-image
+          path: build/image/trunk/build/final_images/V*_GPL.bin
+          if-no-files-found: error
