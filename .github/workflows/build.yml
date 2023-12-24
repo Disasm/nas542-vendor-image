@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor
-          key: NAS542_V5.21(ABAG.7)C0
+          key: vendor-sources-${{ hashFiles('vendor/SHA256SUMS') }}
 
       - name: Download vendor source files
         run: |
